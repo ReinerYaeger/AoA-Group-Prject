@@ -7,7 +7,7 @@ public class Controller {
         System.out.println("Controller created");
     }
 
-    public boolean analyseFile(String fileLocation) {
+    public boolean isFileFound(String fileLocation) {
         System.out.println("Analysing file: " + fileLocation);
 
         try {
@@ -16,9 +16,14 @@ public class Controller {
                 throw new FileNotFoundException("File not found");
             }
         } catch (FileNotFoundException e) {
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
             return false;
         }
         return true;
+    }
+
+    public void analyseFile(String fileLocation) {
+        System.out.println("Analysing file: " + fileLocation);
+
     }
 }

@@ -1,3 +1,5 @@
+import com.sun.source.tree.Tree;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -70,11 +72,12 @@ public class View {
                 String fileLocation = fileLocationTextField.getText();
                 Controller controller = new Controller();
 
-                if(!controller.analyseFile(fileLocation)) {
+                if(!controller.isFileFound(fileLocation)) {
                     JOptionPane.showMessageDialog(null, "File not found Try Again",
                                                   "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
+                controller.analyseFile(fileLocation);
             }
         });
     }
