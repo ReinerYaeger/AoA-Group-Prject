@@ -4,7 +4,7 @@ import java.io.FileNotFoundException;
 public class Controller {
 
     Controller() {
-        System.out.println("Controller created");
+
     }
 
     public boolean isFileFound(String fileLocation) {
@@ -14,6 +14,9 @@ public class Controller {
             File file = new File(fileLocation);
             if (! file.exists()) {
                 throw new FileNotFoundException("File not found");
+            }
+            if(!file.canRead()){
+                throw new FileNotFoundException("File cannot be read");
             }
         } catch (FileNotFoundException e) {
             System.err.println(e.getMessage());
