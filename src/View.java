@@ -8,9 +8,9 @@ import java.awt.event.ActionListener;
 public class View {
 
     JFrame frame;
-    JPanel fileLocationPanel;
-    JLabel fileLocationLabel;
-    JTextField fileLocationTextField;
+    JPanel fileLocationPanelPerson;
+    JLabel fileLocationLabelPerson;
+    JTextField fileLocationTextFieldPerson;
     JButton fileLocationButton;
     JPanel resultPanel;
     JLabel resultLabel;
@@ -26,22 +26,22 @@ public class View {
         frame.setSize(600, 500);
         frame.setLayout(null);
 
-        fileLocationPanel = new JPanel();
-        fileLocationPanel.setBounds(10, 10, 600, 50);
-        fileLocationPanel.setLayout(null);
+        fileLocationPanelPerson = new JPanel();
+        fileLocationPanelPerson.setBounds(10, 10, 600, 50);
+        fileLocationPanelPerson.setLayout(null);
 
-        fileLocationLabel = new JLabel("File Location:");
-        fileLocationLabel.setBounds(10, 10, 100, 30);
+        fileLocationLabelPerson = new JLabel("Person File Location:");
+        fileLocationLabelPerson.setBounds(10, 10, 100, 30);
 
-        fileLocationTextField = new JTextField();
-        fileLocationTextField.setBounds(110, 10, 310, 30);
+        fileLocationTextFieldPerson = new JTextField();
+        fileLocationTextFieldPerson.setBounds(110, 10, 310, 30);
 
         fileLocationButton = new JButton("Analyse");
         fileLocationButton.setBounds(410, 10, 90, 30);
 
-        fileLocationPanel.add(fileLocationLabel);
-        fileLocationPanel.add(fileLocationTextField);
-        fileLocationPanel.add(fileLocationButton);
+        fileLocationPanelPerson.add(fileLocationLabelPerson);
+        fileLocationPanelPerson.add(fileLocationTextFieldPerson);
+        fileLocationPanelPerson.add(fileLocationButton);
 
         resultPanel = new JPanel();
         resultPanel.setBounds(10, 70, 600, 380);
@@ -62,14 +62,14 @@ public class View {
         resultPanel.add(resultLabel);
         resultPanel.add(scroll);
 
-        frame.add(fileLocationPanel);
+        frame.add(fileLocationPanelPerson);
         frame.add(resultPanel);
         frame.setVisible(true);
 
         fileLocationButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                String fileLocation = fileLocationTextField.getText();
+                String fileLocation = fileLocationTextFieldPerson.getText();
                 Controller controller = new Controller();
 
                 if(!controller.isFileFound(fileLocation)) {
