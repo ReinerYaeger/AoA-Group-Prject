@@ -11,74 +11,81 @@ public class View {
     JPanel fileLocationPanelPerson;
     JLabel fileLocationLabelPerson;
     JTextField fileLocationTextFieldPerson;
+    JPanel fileLocationPanelActivities;
+    JLabel fileLocationLabelActivitiesActivities;
+    JTextField fileLocationTextFieldActivities;
     JButton fileLocationButton;
     JPanel resultPanel;
     JLabel resultLabel;
     JTextArea resultTextArea;
     JScrollPane scroll;
 
+    //create a user interface using the gridbag layout manager and add the components to the frame in the View constructor
     public View() {
-
-        //create a layout configuration using the Flowlayout class
-        FlowLayout layout = new FlowLayout();
-        frame = new JFrame("File Reader");
+        frame = new JFrame("File Analysis");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(600, 500);
-        frame.setLayout(null);
+        frame.setSize(500, 500);
+        frame.setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.insets = new Insets(10, 10, 10, 10);
 
         fileLocationPanelPerson = new JPanel();
-        fileLocationPanelPerson.setBounds(10, 10, 600, 50);
-        fileLocationPanelPerson.setLayout(null);
-
-        fileLocationLabelPerson = new JLabel("Person File Location:");
-        fileLocationLabelPerson.setBounds(10, 10, 100, 30);
-
-        fileLocationTextFieldPerson = new JTextField();
-        fileLocationTextFieldPerson.setBounds(110, 10, 310, 30);
-
-        fileLocationButton = new JButton("Analyse");
-        fileLocationButton.setBounds(410, 10, 90, 30);
-
+        fileLocationLabelPerson = new JLabel("Person File Location");
+        fileLocationTextFieldPerson = new JTextField(20);
         fileLocationPanelPerson.add(fileLocationLabelPerson);
         fileLocationPanelPerson.add(fileLocationTextFieldPerson);
-        fileLocationPanelPerson.add(fileLocationButton);
+        c.gridx = 0;
+        c.gridy = 0;
+        frame.add(fileLocationPanelPerson, c);
+
+        fileLocationPanelActivities = new JPanel();
+        fileLocationLabelActivitiesActivities = new JLabel("Activities File Location");
+        fileLocationTextFieldActivities = new JTextField(20);
+        fileLocationPanelActivities.add(fileLocationLabelActivitiesActivities);
+        fileLocationPanelActivities.add(fileLocationTextFieldActivities);
+        c.gridx = 0;
+        c.gridy = 1;
+        frame.add(fileLocationPanelActivities, c);
+
+        fileLocationButton = new JButton("Analyse");
+        c.gridx = 0;
+        c.gridy = 2;
+        frame.add(fileLocationButton, c);
 
         resultPanel = new JPanel();
-        resultPanel.setBounds(10, 70, 600, 380);
-        resultPanel.setLayout(null);
-
-        resultLabel = new JLabel("Result:");
-        resultLabel.setBounds(10, 10, 100, 30);
-
-        resultTextArea = new JTextArea();
+        resultLabel = new JLabel("Result");
+        resultTextArea = new JTextArea(10, 20);
         resultTextArea.setEditable(false);
-        resultTextArea.setBounds(10, 50, 500, 320);
-        resultTextArea.setLineWrap(true);
-
         scroll = new JScrollPane(resultTextArea);
-        scroll.setBounds(10, 50, 500, 320);
-        scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-
         resultPanel.add(resultLabel);
         resultPanel.add(scroll);
+        c.gridx = 0;
+        c.gridy = 3;
+        frame.add(resultPanel, c);
 
-        frame.add(fileLocationPanelPerson);
-        frame.add(resultPanel);
         frame.setVisible(true);
 
         fileLocationButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                String fileLocation = fileLocationTextFieldPerson.getText();
+                String filePersonLocation = fileLocationTextFieldPerson.getText();
+                String fileActLocation2 = fileLocationTextFieldActivities.getText();
                 Controller controller = new Controller();
 
-                if(!controller.isFileFound(fileLocation)) {
-                    JOptionPane.showMessageDialog(null, "File not found Try Again",
-                                                  "Error", JOptionPane.ERROR_MESSAGE);
+                if(!controller.isFileFound(filePersonLocation,fileActLocation2)) {
                     return;
                 }
-                controller.analyseFile(fileLocation);
+                controller.readPersonFile(filePersonLocation);
+                controller.readActFile(fileActLocation2);
+                Frame frame1 = new Frame();
+                frame1.setVisible(true);
+                frame1.setSize(1000,1000);
+                JTextArea jt = new JTextArea(50,50);
+                jt.append(controller.getPersonList().toString());
+                frame1.add(jt);
             }
         });
     }
+
 }
