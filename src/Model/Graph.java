@@ -1,3 +1,5 @@
+package Model;
+
 import java.util.Arrays;
 
 public class Graph{
@@ -6,6 +8,10 @@ public class Graph{
     private int nov; //number of vertices
     private int noe; //number of edges
     private String vertexLabel[];
+    private int[] distance;
+    private boolean[] visited;
+
+
 
     public Graph(int nov){
         this.nov = nov;
@@ -42,8 +48,8 @@ public class Graph{
         return sb.toString();
     }
 
-    public void addVertex(String firstName, String lastName, String phoneNumber, String emailAddress, String resCom, String school, String employer, String reqPrivacy) {
-        // add vertex to graph
-
+    public void addVertex(Person person) {
+        vertexLabel = new String[nov];
+        vertexLabel[nov] = person.getFirstName();
     }
 }

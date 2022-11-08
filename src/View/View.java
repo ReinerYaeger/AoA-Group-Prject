@@ -1,3 +1,6 @@
+package View;
+
+import Controller.Controller;
 import com.sun.source.tree.Tree;
 
 import javax.swing.*;
@@ -20,7 +23,7 @@ public class View {
     JTextArea resultTextArea;
     JScrollPane scroll;
 
-    //create a user interface using the gridbag layout manager and add the components to the frame in the View constructor
+    //create a user interface using the gridbag layout manager and add the components to the frame in the View.View constructor
     public View() {
         frame = new JFrame("File Analysis");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -76,8 +79,10 @@ public class View {
                 if(!controller.isFileFound(filePersonLocation,fileActLocation2)) {
                     return;
                 }
-                controller.readPersonFile(filePersonLocation);
-                controller.readActFile(fileActLocation2);
+                controller.readFiles(filePersonLocation,fileActLocation2);
+
+
+
                 Frame frame1 = new Frame();
                 frame1.setVisible(true);
                 frame1.setSize(1000,1000);
