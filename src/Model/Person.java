@@ -40,6 +40,17 @@ public class Person {
         this.reqPrivacy = reqPrivacy;
     }
 
+    public Person(Person person){
+        this.firstName = person.firstName;
+        this.lastName = person.lastName;
+        this.phoneNumber = person.phoneNumber;
+        this.emailAddress = person.emailAddress;
+        this.resCom = person.resCom;
+        this.school = person.school;
+        this.employer =person. employer;
+        this.reqPrivacy = person.reqPrivacy;
+    }
+
     public String getFirstName( ) {
         return firstName;
     }
@@ -102,48 +113,6 @@ public class Person {
 
     public void setReqPrivacy(boolean reqPrivacy) {
         this.reqPrivacy = reqPrivacy;
-    }
-
-    public void  loadPersons(String filePersonLocation) {
-
-        try(Reader reader = Files.newBufferedReader(( Paths.get(filePersonLocation)))){
-            Iterable<CSVRecord> persons = CSVFormat.DEFAULT.parse(reader);
-            for (CSVRecord person : persons) {
-                String firstName = person.get(0);
-                String lastName = person.get(1);
-                String phoneNumber = person.get(2);
-                String emailAddress = person.get(3);
-                String resCom = person.get(4);
-                String school = person.get(5);
-                String employer = person.get(6);
-                String reqPrivacy = person.get(7);
-                //Store add the graph
-                System.out.println("Record No - " + person.getRecordNumber()
-                                           + " : " + firstName + " " + lastName + " " +
-                                           phoneNumber + " " + emailAddress + " " + resCom + " " +
-                                           school + " " + employer + " " + reqPrivacy);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void loadActivities(String fileActLocation2){
-        try(Reader reader = Files.newBufferedReader(( Paths.get(fileActLocation2)))){
-
-            Iterable<CSVRecord> persons = CSVFormat.DEFAULT.parse(reader);
-            for (CSVRecord person : persons) {
-               String firstName = person.get(0);
-               String lastName = person.get(1);
-               String activity = person.get(2);
-
-               System.out.println("Record No - " + person.getRecordNumber()
-                                           + " : " + firstName + " " + lastName + " " +
-                                           activity);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
 
