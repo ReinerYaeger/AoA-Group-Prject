@@ -80,13 +80,6 @@ public class View {
                     return;
                 }
                 controller.readFiles(filePersonLocation,fileActLocation2);
-
-                Frame frame1 = new Frame();
-                frame1.setVisible(true);
-                frame1.setSize(1000,1000);
-                JTextArea jt = new JTextArea(50,50);
-                jt.append(controller.getPersonList().toString());
-                frame1.add(jt);
             }
         });
     }

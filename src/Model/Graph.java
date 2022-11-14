@@ -1,35 +1,45 @@
 package Model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
-import Model.*;
+import java.util.Map;
 
 public class Graph{
 
-    private List<List<Person>> adjacencyMatrix;
-    private Person person;
-    private int nov; //number of vertices
-    private int noe; //number of edges
-    private String vertexLabel[];
-    private int[] distance;
-    private boolean[] visited;
+    List<Person> personList = new ArrayList<>();
+    List<Activity> activityList = new ArrayList<>();
+    Map<Person,Relation> map = new HashMap<>();
+    public Graph(List<Person> p, List<Activity> a){
+       personList = p;
+       activityList = a;
 
-    public Graph(List<Person> personList, List<Activity> activityList){
-        List<List<Person>> adjList = new ArrayList<>();
+               /* if(person.getRelation().getEmployer().equals(person1.getRelation().getEmployer())
+                        || person.getRelation().getResCom().equals(person1.getRelation().getResCom())
+                        || person.getRelation().getSchool().equals(person1.getRelation().getSchool())){
+                    map.put(person,person1);
+                }
+                }
+            }
+        }*/
+        createGraph();
+    }
 
-        for(int i = 0; i < personList.size(); i++){
-            adjList.add(i, new ArrayList<>());
-        }
-        for(int i = 0; i < activityList.size(); i++){
-            for(int j = 0; j < activityList.size(); j++)
-            if(personList.get(i).getFirstName().equals(activityList.get(j).firstName) &&
-            personList.get(i).getLastName().equals(activityList.get(j).lastName)){
+    public void createGraph() {
 
+        for (Person person : personList) {
+            //System.out.println(person);
+            for (Person person1 : personList) {
+                if (person.getRelation().getEmployer().equals(person1.getRelation().getEmployer())
+                        || person.getRelation().getResCom().equals(person1.getRelation().getResCom())
+                        || person.getRelation().getSchool().equals(person1.getRelation().getSchool())) {
+                    map.put(person, person.getRelation());
+                }
             }
         }
 
-
-
+        System.out.println(map.toString());
     }
+
+
 }

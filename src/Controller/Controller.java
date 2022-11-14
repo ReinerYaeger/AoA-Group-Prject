@@ -3,6 +3,7 @@ package Controller;
 import Model.Activity;
 import Model.Graph;
 import Model.Person;
+import Model.Relation;
 import View.View;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
@@ -15,17 +16,23 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Controller {
     Person person;
     Activity activity;
-    Graph graph;
+
+    Relation relationship;
     View view;
+    HashMap<Person,Person> map;
 
     public Controller( ) {
         person = new Person();
         activity = new Activity();
+        relationship = new Relation();
+        map = new HashMap<>();
     }
 
     public boolean isFileFound(String filePersonLocation, String fileActLocation2) {
@@ -51,9 +58,10 @@ public class Controller {
     }
 
     public void readFiles(String filePersonLocation, String fileActLocation2) {
-        graph = new Graph(loadPersons(filePersonLocation),loadActivities(fileActLocation2));
-    }
 
+        Graph graph = new Graph(loadPersons(filePersonLocation), loadActivities(fileActLocation2));
+
+    }
     public List<Person> getPersonList(){
 
         return null;
@@ -62,8 +70,10 @@ public class Controller {
     public List<Person> loadPersons(String filePersonLocation) {
 
         List<Person> pl = new ArrayList<Person>();
+         Person p;
 
         try(Reader reader = Files.newBufferedReader(( Paths.get(filePersonLocation)))){
+
             Iterable<CSVRecord> persons = CSVFormat.DEFAULT.parse(reader);
             for (CSVRecord person : persons) {
                 String firstName = person.get(0);
@@ -74,12 +84,14 @@ public class Controller {
                 String school = person.get(5);
                 String employer = person.get(6);
                 boolean reqPrivacy = Boolean.parseBoolean(person.get(7));
-                pl.add(new Person(firstName, lastName, phoneNumber, emailAddress, resCom, school, employer,reqPrivacy));
-
+                p = new Person(firstName, lastName, phoneNumber, emailAddress,reqPrivacy);
+                relationship = new Relation(resCom,school,employer);
+                pl.add(new Person(firstName, lastName, phoneNumber, emailAddress,reqPrivacy,relationship));
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        System.out.println(map.toString());
         return pl;
     }
 
@@ -93,10 +105,6 @@ public class Controller {
                 String firstName = person.get(0);
                 String lastName = person.get(1);
                 String activity = person.get(2);
-
-                System.out.println("Record No - " + person.getRecordNumber()
-                                           + " : " + firstName + " " + lastName + " " +
-                                           activity);
 
                 al.add(new Activity(firstName,lastName,activity));
             }

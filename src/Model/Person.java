@@ -13,10 +13,8 @@ public class Person {
     String lastName;
     String phoneNumber;
     String emailAddress;
-    String resCom ; // residential community
-    String school;
-    String employer;
     boolean reqPrivacy;// request privacy
+    Relation relation;
 
     //default constructor
     public Person() {
@@ -24,20 +22,26 @@ public class Person {
         lastName = "";
         phoneNumber = "";
         emailAddress = "";
-        resCom = "";
-        school = "";
-        employer = "";
         reqPrivacy = false;
+        relation = new Relation();
     }
-    public Person(String firstName, String lastName, String phoneNumber, String emailAddress, String resCom, String school, String employer, boolean reqPrivacy) {
+    public Person(String firstName, String lastName, String phoneNumber, String emailAddress, boolean reqPrivacy) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
         this.emailAddress = emailAddress;
-        this.resCom = resCom;
-        this.school = school;
-        this.employer = employer;
         this.reqPrivacy = reqPrivacy;
+    }
+
+    public Person(String firstName, String lastName, String phoneNumber, String emailAddress, boolean reqPrivacy,
+    Relation relation) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
+        this.emailAddress = emailAddress;
+        this.reqPrivacy = reqPrivacy;
+        this.relation = relation;
+
     }
 
     public Person(Person person){
@@ -45,9 +49,6 @@ public class Person {
         this.lastName = person.lastName;
         this.phoneNumber = person.phoneNumber;
         this.emailAddress = person.emailAddress;
-        this.resCom = person.resCom;
-        this.school = person.school;
-        this.employer =person. employer;
         this.reqPrivacy = person.reqPrivacy;
     }
 
@@ -83,30 +84,6 @@ public class Person {
         this.emailAddress = emailAddress;
     }
 
-    public String getResCom( ) {
-        return resCom;
-    }
-
-    public void setResCom(String resCom) {
-        this.resCom = resCom;
-    }
-
-    public String getSchool( ) {
-        return school;
-    }
-
-    public void setSchool(String school) {
-        this.school = school;
-    }
-
-    public String getEmployer( ) {
-        return employer;
-    }
-
-    public void setEmployer(String employer) {
-        this.employer = employer;
-    }
-
     public boolean isReqPrivacy( ) {
         return reqPrivacy;
     }
@@ -115,18 +92,11 @@ public class Person {
         this.reqPrivacy = reqPrivacy;
     }
 
+    public Relation getRelation( ) {
+        return relation;
+    }
 
-    @Override
-    public String toString( ) {
-        return "Person{" +
-                "firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", emailAddress='" + emailAddress + '\'' +
-                ", resCom='" + resCom + '\'' +
-                ", school='" + school + '\'' +
-                ", employer='" + employer + '\'' +
-                ", reqPrivacy=" + reqPrivacy +
-                '}';
+    public void setRelation(Relation relation) {
+        this.relation = relation;
     }
 }
