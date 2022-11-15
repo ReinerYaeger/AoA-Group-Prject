@@ -69,6 +69,9 @@ public class View {
 
         frame.setVisible(true);
 
+        fileLocationTextFieldPerson.setText("/home/atom/Downloads/SamplefilePersons2022Oct31text.csv");
+        fileLocationTextFieldActivities.setText("/home/atom/Downloads/SamplefileActivities2022Oct31text.csv");
+
         fileLocationButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {

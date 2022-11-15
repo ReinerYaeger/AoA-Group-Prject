@@ -8,7 +8,7 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class Person {
+public class Person  {
     String firstName;
     String lastName;
     String phoneNumber;
