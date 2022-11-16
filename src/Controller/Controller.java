@@ -1,9 +1,6 @@
 package Controller;
 
-import Model.Activity;
-import Model.Graph;
-import Model.Person;
-import Model.Relation;
+import Model.*;
 import View.View;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
@@ -26,7 +23,7 @@ public class Controller {
 
     Relation relationship;
     View view;
-    HashMap<Person,Person> map;
+    HashMap<Integer ,String> map;
 
     public Controller( ) {
         person = new Person();
@@ -59,7 +56,13 @@ public class Controller {
 
     public void readFiles(String filePersonLocation, String fileActLocation2) {
 
-        Graph graph = new Graph(loadPersons(filePersonLocation), loadActivities(fileActLocation2));
+        //Graph graph = new Graph(loadPersons(filePersonLocation), loadActivities(fileActLocation2));
+        long startTime = System.nanoTime();
+        GGraph graph = new GGraph(loadPersons(filePersonLocation));
+        graph.findFriends();
+        long endTime = System.nanoTime();
+        System.out.println(endTime - startTime);
+        graph.findShortestPath();
 
     }
     public List<Person> getPersonList(){
