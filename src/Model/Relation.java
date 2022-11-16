@@ -4,12 +4,14 @@ public class Relation {
     String resCom ; // residential community
     String school;
     String employer;
+    int distance;
 
 
     public Relation(){
         resCom = "";
         school ="";
         employer ="";
+            int distance=0;
     }
 
     public Relation(String resCom, String school, String employer) {
@@ -40,6 +42,14 @@ public class Relation {
 
     public void setEmployer(String employer) {
         this.employer = employer;
+    }
+
+    public int getDistance( ) {
+        return distance;
+    }
+
+    public void setDistance(int distance) {
+        this.distance = distance;
     }
 
     @Override

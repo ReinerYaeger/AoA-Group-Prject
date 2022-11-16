@@ -13,7 +13,7 @@ public class GGraph {
 
     Map<Person,Integer> edgeMap = new HashMap<>();
     int distance = 0;
-    final int SIZE = 1000;
+    final int SIZE = 10;
 
     Person person = new Person();
 
@@ -40,7 +40,7 @@ public class GGraph {
                         || person.getRelation().getResCom().equals(person1.getRelation().getResCom())
                         || person.getRelation().getSchool().equals(person1.getRelation().getSchool()))
                         && person != person1 ) {
-
+                        person1.getRelation().setDistance(distance);
                         edgeMap.put(person1,distance);
                         personIList.add(person1);
 
@@ -54,13 +54,17 @@ public class GGraph {
 
             //Testing the first person in the list friends
             System.out.println("Person: " + person.getFirstName());
-            for(i=0 ;i <=SIZE ; i++){
-                if(map.get(edgeMap.get(person)).get(person) != map.get(edgeMap.get(person)).get(person)) {
+
+            for(i = 0 ;i <=SIZE  ; i++){
+                System.out.println("Friend: " + map.get(person).keySet().toArray()[i] + " Distance: " + map.get(person).values().toArray()[i]);
+            }
+           /* for(i=0 ;i <=SIZE ; i++){
+                if(map.get(edgeMap)) {
                     System.out.println("friends of " + person.getFirstName() +
                                                "\n Friends: " + personList.get(i).getFirstName() +
                                                "\n Distance: " + edgeMap.get(personList.get(i)));
                 }
-            }
+            }*/
         }
     }
 
