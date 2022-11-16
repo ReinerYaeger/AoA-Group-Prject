@@ -57,12 +57,16 @@ public class Controller {
     public void readFiles(String filePersonLocation, String fileActLocation2) {
 
         //Graph graph = new Graph(loadPersons(filePersonLocation), loadActivities(fileActLocation2));
-        long startTime = System.nanoTime();
+        /*long startTime = System.currentTimeMillis();
         GGraph graph = new GGraph(loadPersons(filePersonLocation));
         graph.findFriends();
-        long endTime = System.nanoTime();
+        long endTime = System.currentTimeMillis();
         System.out.println(endTime - startTime);
-        graph.findShortestPath();
+        graph.findDegreeOfSeparation();*/
+
+        Graph graph = new Graph(loadPersons(filePersonLocation));
+        graph.findFriends();
+        graph.findDegreeOfSeparation();
 
     }
     public List<Person> getPersonList(){
