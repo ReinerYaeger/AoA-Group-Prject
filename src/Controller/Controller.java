@@ -64,9 +64,9 @@ public class Controller {
         System.out.println(endTime - startTime);
         graph.findDegreeOfSeparation();*/
 
-        Graph graph = new Graph(loadPersons(filePersonLocation));
+        GGraph graph = new GGraph(loadPersons(filePersonLocation));
         graph.findFriends();
-        graph.findDegreeOfSeparation();
+        //graph.findDegreeOfSeparation();
 
     }
     public List<Person> getPersonList(){

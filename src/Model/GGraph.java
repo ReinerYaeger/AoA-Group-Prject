@@ -56,7 +56,9 @@ public class GGraph {
             System.out.println("Person: " + person.getFirstName());
 
             for(i = 0 ;i <=SIZE  ; i++){
-                System.out.println("Friend: " + map.get(person).keySet().toArray()[i] + " Distance: " + map.get(person).values().toArray()[i]);
+                if(person != personList.get(i) && edgeMap.containsKey(personList.get(i))){
+                    System.out.println("\t" + personList.get(i).getFirstName() + " Distance: " + personIList.get(i).getRelation().getDistance());
+                }
             }
            /* for(i=0 ;i <=SIZE ; i++){
                 if(map.get(edgeMap)) {
@@ -65,7 +67,7 @@ public class GGraph {
                                                "\n Distance: " + edgeMap.get(personList.get(i)));
                 }
             }*/
-        }
+    }
     }
 
     //implement floyd warshall algorithm on the graph
