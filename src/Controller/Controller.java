@@ -15,7 +15,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Controller {
     Person person;
@@ -83,6 +82,7 @@ public class Controller {
 
             Iterable<CSVRecord> persons = CSVFormat.DEFAULT.parse(reader);
             for (CSVRecord person : persons) {
+                Boolean track = true;
                 String firstName = person.get(0);
                 String lastName = person.get(1);
                 String phoneNumber = person.get(2);
@@ -90,10 +90,15 @@ public class Controller {
                 String resCom = person.get(4);
                 String school = person.get(5);
                 String employer = person.get(6);
-                boolean reqPrivacy = Boolean.parseBoolean(person.get(7));
-                p = new Person(firstName, lastName, phoneNumber, emailAddress,reqPrivacy);
-                relationship = new Relation(resCom,school,employer);
-                pl.add(new Person(firstName, lastName, phoneNumber, emailAddress,reqPrivacy,relationship));
+                String reqPrivacy = person.get(7);
+                if(reqPrivacy.equals("Y")){
+                    track = false;
+                }
+                if(track) {
+                    p = new Person(firstName, lastName, phoneNumber, emailAddress, track);
+                    relationship = new Relation(resCom, school, employer);
+                    pl.add(new Person(firstName, lastName, phoneNumber, emailAddress, track, relationship));
+                }
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
