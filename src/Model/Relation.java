@@ -1,6 +1,6 @@
 package Model;
 
-public class Relation {
+public class  Relation {
     String resCom ; // residential community
     String school;
     String employer;

@@ -27,14 +27,13 @@ public class GGraph {
         int l=0,i=0;
 
         for (Person person : personList) { // O(n)
-            distance = 0;
+            distance = 1;
             personIList = new ArrayList<>();
             edgeMap = new HashMap<>();
             if(l==SIZE)
                 break;
 
             for (Person person1 : personList) { // O(n) n*n = O(n^2)
-                distance++;
 
                 if ((person.getRelation().getEmployer().equals(person1.getRelation().getEmployer())
                         || person.getRelation().getResCom().equals(person1.getRelation().getResCom())
@@ -43,11 +42,13 @@ public class GGraph {
                         person1.getRelation().setDistance(distance);
                         edgeMap.put(person1,distance);
                         personIList.add(person1);
+                        distance = 0;
 
                         if(i == SIZE)
                             break;
                     i++;
                 }
+                distance++;
             }
             map.put(person, edgeMap);
             l++;
@@ -57,7 +58,7 @@ public class GGraph {
 
             for(i = 0 ;i <=SIZE  ; i++){
                 if(person != personList.get(i) && edgeMap.containsKey(personList.get(i))){
-                    System.out.println("\t" + personList.get(i).getFirstName() + " Distance: " + personIList.get(i).getRelation().getDistance());
+                    System.out.println("\t" + personList.get(i).getFirstName()+ " " +personList.get(i).getLastName() + " Distance: " + personIList.get(i).getRelation().getDistance());
                 }
             }
            /* for(i=0 ;i <=SIZE ; i++){
