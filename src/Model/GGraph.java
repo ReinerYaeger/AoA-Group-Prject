@@ -8,12 +8,12 @@ import java.util.Map;
 
 public class GGraph {
 
-    Map<Person, Map<Person,Integer>> map = new HashMap<>();
+    Map<Person, Map<Integer,Person>> map = new HashMap<Person, Map<Integer,Person>>();
     List<Person> personList = new ArrayList<>();
 
-    Map<Person,Integer> edgeMap = new HashMap<>();
+    Map<Integer,Person> edgeMap = new HashMap<Integer,Person>();
     int distance = 0;
-    final int SIZE = 10;
+    final int SIZE = personList.size();
 
     Person person = new Person();
 
@@ -40,7 +40,7 @@ public class GGraph {
                         || person.getRelation().getSchool().equals(person1.getRelation().getSchool()))
                         && person != person1 ) {
                         person1.getRelation().setDistance(distance);
-                        edgeMap.put(person1,distance);
+                        edgeMap.put(distance,person1);
                         personIList.add(person1);
                         distance = 0;
 
@@ -54,21 +54,21 @@ public class GGraph {
             l++;
 
             //Testing the first person in the list friends
-            System.out.println("Person: " + person.getFirstName());
+            System.out.println("Person: " + person.getFirstName() + " " + person.getLastName() + " " + map.get(person).get(i));
 
             for(i = 0 ;i <=SIZE  ; i++){
-                if(person != personList.get(i) && edgeMap.containsKey(personList.get(i))){
+                if(person != personList.get(i) && edgeMap.containsKey(i)){
                     System.out.println("\t" + personList.get(i).getFirstName()+ " " +personList.get(i).getLastName() + " Distance: " + personIList.get(i).getRelation().getDistance());
                 }
             }
-           /* for(i=0 ;i <=SIZE ; i++){
-                if(map.get(edgeMap)) {
-                    System.out.println("friends of " + person.getFirstName() +
-                                               "\n Friends: " + personList.get(i).getFirstName() +
-                                               "\n Distance: " + edgeMap.get(personList.get(i)));
-                }
-            }*/
+        }
     }
+
+    public void depthFirstSearch(){
+        for( int i =0 ; i<SIZE ; i++){
+           // Person dfsPerson = map.get(personList.get(i)).;
+        }
+
     }
 
     //implement floyd warshall algorithm on the graph

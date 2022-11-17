@@ -5,6 +5,7 @@ public class  Relation {
     String school;
     String employer;
     int distance;
+    boolean visited;
 
 
     public Relation(){
@@ -12,6 +13,7 @@ public class  Relation {
         school ="";
         employer ="";
             int distance=0;
+            visited = false;
     }
 
     public Relation(String resCom, String school, String employer) {
@@ -50,6 +52,14 @@ public class  Relation {
 
     public void setDistance(int distance) {
         this.distance = distance;
+    }
+
+    public boolean isVisited( ) {
+        return visited;
+    }
+
+    public void setVisited(boolean visited) {
+        this.visited = visited;
     }
 
     @Override
