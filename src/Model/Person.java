@@ -1,3 +1,9 @@
+/*
+*   Chevaughn Gibson 1900396,
+*   Gail-Ann Archer 2002407,
+*   Lashea Beaton 2003885,
+*   Jermaine Graham 1704263
+*/
 package Model;
 
 import org.apache.commons.csv.CSVFormat;
