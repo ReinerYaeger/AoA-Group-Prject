@@ -1,9 +1,3 @@
-/*
-*   Chevaughn Gibson 1900396,
-*   Gail-Ann Archer 2002407,
-*   Lashea Beaton 2003885,
-*   Jermaine Graham 1704263
-*/
 package Controller;
 
 import Model.*;
@@ -21,6 +15,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Controller {
     Person person;
@@ -62,16 +57,16 @@ public class Controller {
     public void readFiles(String filePersonLocation, String fileActLocation2) {
 
         //Graph graph = new Graph(loadPersons(filePersonLocation), loadActivities(fileActLocation2));
-        /*long startTime = System.currentTimeMillis();
-        GGraph graph = new GGraph(loadPersons(filePersonLocation));
-        graph.findFriends();
-        long endTime = System.currentTimeMillis();
-        System.out.println(endTime - startTime);
-        graph.findDegreeOfSeparation();*/
+        long startTime = System.nanoTime();
 
         GGraph graph = new GGraph(loadPersons(filePersonLocation));
         graph.findFriends();
-        //graph.findDegreeOfSeparation();
+        ArrayList<Person> randomPeople = graph.findRandomPeople();
+        System.out.println("by " + graph.degreeOfSeparationRandom(randomPeople.get(0),randomPeople.get(1)));
+
+
+        long endTime = System.nanoTime();
+        System.out.println(endTime - startTime);
 
     }
     public List<Person> getPersonList(){
@@ -88,7 +83,6 @@ public class Controller {
 
             Iterable<CSVRecord> persons = CSVFormat.DEFAULT.parse(reader);
             for (CSVRecord person : persons) {
-                Boolean track = true;
                 String firstName = person.get(0);
                 String lastName = person.get(1);
                 String phoneNumber = person.get(2);
@@ -96,15 +90,10 @@ public class Controller {
                 String resCom = person.get(4);
                 String school = person.get(5);
                 String employer = person.get(6);
-                String reqPrivacy = person.get(7);
-                if(reqPrivacy.equals("Y")){
-                    track = false;
-                }
-                if(track) {
-                    p = new Person(firstName, lastName, phoneNumber, emailAddress, track);
-                    relationship = new Relation(resCom, school, employer);
-                    pl.add(new Person(firstName, lastName, phoneNumber, emailAddress, track, relationship));
-                }
+                boolean reqPrivacy = Boolean.parseBoolean(person.get(7));
+                p = new Person(firstName, lastName, phoneNumber, emailAddress,reqPrivacy);
+                relationship = new Relation(resCom,school,employer);
+                pl.add(new Person(firstName, lastName, phoneNumber, emailAddress,reqPrivacy,relationship));
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
