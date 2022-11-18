@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Person  {
     String firstName;
@@ -21,6 +23,7 @@ public class Person  {
     String emailAddress;
     boolean reqPrivacy;// request privacy
     Relation relation;
+    List<Activity> activity , recommendedActivity;
 
     //default constructor
     public Person() {
@@ -30,32 +33,42 @@ public class Person  {
         emailAddress = "";
         reqPrivacy = false;
         relation = new Relation();
-    }
-    public Person(String firstName, String lastName, String phoneNumber, String emailAddress, boolean reqPrivacy) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phoneNumber = phoneNumber;
-        this.emailAddress = emailAddress;
-        this.reqPrivacy = reqPrivacy;
+        activity = new ArrayList<>();
+        recommendedActivity = new ArrayList<>();
     }
 
-    public Person(String firstName, String lastName, String phoneNumber, String emailAddress, boolean reqPrivacy,
-    Relation relation) {
+    public Person(String firstName, String lastName, String phoneNumber, String emailAddress, boolean reqPrivacy, Relation relation, ArrayList<Activity> activity,ArrayList<Activity> r) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
         this.emailAddress = emailAddress;
         this.reqPrivacy = reqPrivacy;
         this.relation = relation;
-
+        this.activity = activity;
+        recommendedActivity = r;
     }
 
-    public Person(Person person){
-        this.firstName = person.firstName;
-        this.lastName = person.lastName;
-        this.phoneNumber = person.phoneNumber;
-        this.emailAddress = person.emailAddress;
-        this.reqPrivacy = person.reqPrivacy;
+    public Person(String firstName, String lastName, String phoneNumber, String emailAddress, boolean reqPrivacy) {
+
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
+        this.emailAddress = emailAddress;
+        this.reqPrivacy = reqPrivacy;
+        activity = new ArrayList<>();
+        recommendedActivity = new ArrayList<>();
+    }
+
+    public Person(String firstName, String lastName, String phoneNumber, String emailAddress, boolean reqPrivacy, Relation relationship) {
+
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
+        this.emailAddress = emailAddress;
+        this.reqPrivacy = reqPrivacy;
+        this.relation = relationship;
+        activity = new ArrayList<>();
+        recommendedActivity = new ArrayList<>();
     }
 
     public String getFirstName( ) {
@@ -104,5 +117,59 @@ public class Person  {
 
     public void setRelation(Relation relation) {
         this.relation = relation;
+    }
+
+    public List<Activity> getActivity( ) {
+        return activity;
+    }
+
+    public void setActivity(List<Activity> activity) {
+        this.activity = activity;
+    }
+
+    public void appendActivity(Activity activity) {
+        this.activity.add(activity);
+    }
+
+    public List<Activity> getRecommendedActivity( ) {
+        return recommendedActivity;
+    }
+
+    public void setRecommendedActivity(List<Activity> recommendedActivity) {
+        this.recommendedActivity = recommendedActivity;
+    }
+
+    public void appendRecommendedActivity(Activity activity) {
+        this.recommendedActivity.add(activity);
+    }
+
+    public String printActivity() {
+        StringBuilder str = new StringBuilder();
+        for (Activity a : activity) {
+            str.append(a.getActivityName()).append(" \n\t");
+
+        }
+        return str.toString();
+    }
+
+    public String printRecommendedActivity() {
+        StringBuilder str = new StringBuilder();
+        for (Activity a : recommendedActivity) {
+            str.append(a.getActivityName()).append(" \n\t");
+        }
+        return str.toString();
+    }
+
+    @Override
+    public String toString( ) {
+        return "Person{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", emailAddress='" + emailAddress + '\'' +
+                ", reqPrivacy=" + reqPrivacy +
+                ", relation=" + relation +
+                ", activity=" + activity +
+                '}';
     }
 }

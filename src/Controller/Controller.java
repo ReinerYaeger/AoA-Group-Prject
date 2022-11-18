@@ -62,16 +62,16 @@ public class Controller {
         GGraph graph = new GGraph(loadPersons(filePersonLocation));
         graph.findFriends();
         ArrayList<Person> randomPeople = graph.findRandomPeople();
+
         System.out.println("by " + graph.degreeOfSeparationRandom(randomPeople.get(0),randomPeople.get(1)));
+
+        graph.associateActivities(loadActivities(fileActLocation2));
+        graph.recommendationEngine();
 
 
         long endTime = System.nanoTime();
         System.out.println(endTime - startTime);
 
-    }
-    public List<Person> getPersonList(){
-
-        return null;
     }
 
     public List<Person> loadPersons(String filePersonLocation) {

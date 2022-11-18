@@ -7,18 +7,21 @@ public class GGraph {
 
     static Map<Person, List<Person>> map = new HashMap<>();
     static List<Person> personList = new ArrayList<>();
+    final int SIZE = 100;
     List<Person> personIList = new ArrayList<>();
     Person person = new Person();
 
     public GGraph(List<Person> pl) {
         personList = pl;
+
+        //pl.sort(Comparator.comparing(Person::getFirstName));
     }
 
     public void findFriends( ){
 
         int l=0,i=0;
         for (Person person : personList) { // O(n)
-            if(l==10)
+            if(l==SIZE)
                 break;
             personIList = new ArrayList<>();
             for (Person person1 : personList) { // O(n) n*n = O(n^2)
@@ -28,7 +31,7 @@ public class GGraph {
                     if (person != person1) {
                         personIList.add(person1);
                     }
-                    if(i==10)
+                    if(i==SIZE)
                         break;
                 }
             }
@@ -40,7 +43,7 @@ public class GGraph {
 
         for (Map.Entry<Person, List<Person>> entry : map.entrySet()) {
             System.out.println(entry.getKey().getFirstName() + " " + entry.getKey().getLastName());
-            for (i = 0; i <= 10; i++) {
+            for (i = 0; i <= map.size(); i++) {
                 System.out.println("\tFriends: " + map.get(entry.getKey()).get(i).getFirstName());
             }
         }
@@ -64,7 +67,7 @@ public class GGraph {
             if(random2 == counter )
                 person2 = entry.getKey();
 
-            for (int i = 0; i <= 10; i++) {
+            for (int i = 0; i <= map.size(); i++) {
                 System.out.println("\tFriends: " + map.get(entry.getKey()).get(i).getFirstName());
             }
             counter ++;
@@ -125,6 +128,55 @@ public class GGraph {
         return currentLevel;
     }
 
-    /*Find the */
+
+    public void associateActivities(List<Activity> activities){
+        //activities.sort(Comparator.comparing(Activity::getFirstName));
+        for (Map.Entry<Person, List<Person>> entry : map.entrySet()) {
+            Person p = entry.getKey();
+            System.out.println(p.getFirstName() + " " + p.getLastName());
+            for (int i = 0; i <= activities.size()-1; i++) {
+                Activity a = activities.get(i);
+                if(p.firstName.equals(a.getFirstName())
+                        && p.lastName.equals(a.getLastName())){
+
+                    p.appendActivity(a);
+
+                    System.out.println(" is: " + p.printActivity());
+                }
+            }
+        }
+    }
+
+    public void recommendationEngine(){
+
+        int activitySize =0 ;
+        for (Map.Entry<Person, List<Person>> root : map.entrySet()) {
+            Person rootPerson = root.getKey();
+            for (Map.Entry<Person, List<Person>> entry : map.entrySet()) {
+                Person entryPerson = entry.getKey();
+                if (entry.getKey() == root.getKey()
+                        && ! root.getKey().isReqPrivacy()
+                        && (rootPerson.getRelation().getEmployer().equals(entryPerson.getRelation().getEmployer())
+                        || rootPerson.getRelation().getResCom().equals(entryPerson.getRelation().getResCom())
+                        || rootPerson.getRelation().getSchool().equals(entryPerson.getRelation().getSchool()))){
+
+                    if(rootPerson.getActivity().size() > entryPerson.getActivity().size())
+                        activitySize =rootPerson.getActivity().size();
+                    else
+                        activitySize = entryPerson.getActivity().size();
+
+                    for (int i = 0; i <= activitySize-1; i++) {
+                        Activity activity= rootPerson.getActivity().get(i);
+                        if(!entryPerson.getActivity().contains(activity)){
+                            entryPerson.appendRecommendedActivity(activity);
+                        }
+                    }
+
+                    System.out.println("Suggesting to " + root.getKey().getFirstName() + " " + root.getKey().getLastName() +
+                                               " to add " + entry.getKey().printRecommendedActivity() + " to his/her activity list");
+                }
+            }
+        }
+    }
 
 }

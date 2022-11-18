@@ -14,45 +14,37 @@ public class Activity {
 
     String firstName;
     String lastName;
-    Person srcPerson;
-    Person destPerson;
 
     public Activity(){
         activityName = "";
         firstName = "";
         lastName = "";
-        srcPerson = new Person();
-        destPerson = new Person() ;
     }
 
-    public Activity(String firstname, String lastName, String activityName){
-
-    }
-
-    public Activity(String activityName, Person srcPerson, Person destPerson) {
+    public Activity(String firstName, String lastName,String activityName ) {
         this.activityName = activityName;
-        /*this.srcPerson = srcPerson;
-        this.destPerson = destPerson;*/
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
-    public Activity(String activityName) {
+    public String getActivityName( ) {
+        return activityName;
+    }
+
+    public void setActivityName(String activityName) {
         this.activityName = activityName;
     }
 
-    public Person getSrcPerson( ) {
-        return srcPerson;
+    public String getFirstName( ) {
+        return firstName;
     }
 
-    public void setSrcPerson(Person srcPerson) {
-        this.srcPerson = srcPerson;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public Person getDestPerson( ) {
-        return destPerson;
-    }
-
-    public void setDestPerson(Person destPerson) {
-        this.destPerson = destPerson;
+    public String getLastName( ) {
+        return lastName;
     }
 
     @Override
@@ -64,11 +56,9 @@ public class Activity {
                 '}';
     }
 
-    public String getActivityName( ) {
-        return activityName;
-    }
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
 
-    public void setActivityName(String activityName) {
-        this.activityName = activityName;
+
     }
 }
