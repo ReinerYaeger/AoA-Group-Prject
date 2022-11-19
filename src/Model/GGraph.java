@@ -19,7 +19,7 @@ public class GGraph {
     static List<Person> personList = new ArrayList<>();
 
     /*Testing value for the file size*/
-    final int SIZE = 100;
+    final int SIZE = 1000;
 
     /*People in tree, (with activities associated)*/
     TreeSet<Person> treeSet = new TreeSet<>(new PersonComparator());
@@ -140,10 +140,49 @@ public class GGraph {
             }
 
         }
-
         System.out.println(source.getFirstName() +  " " + source.getLastName() +
                 " is Separated from " + destination.getFirstName() + " " + destination.getLastName() + " by " + currentLevel + " degrees");
         return currentLevel;
+    }
+
+    public void averageDegreeOfSeparation(){
+        Set<Person> visited = new HashSet<>();
+        Queue<Person> queue = new LinkedList<>();
+        Queue<Integer> level = new LinkedList<>();
+
+        int degreeOfSeparation = 0;
+        int counter = 0;
+        int currentLevel = 0;
+        Map.Entry<Person, List<Person>> p = map.entrySet().iterator().next();
+        queue.add(p.getKey());
+        level.add(currentLevel);
+
+
+        for (Map.Entry<Person, List<Person>> entry : map.entrySet()) {
+
+            while(!queue.isEmpty()) {
+                Person currentPerson = queue.poll();
+                currentLevel = level.poll();
+
+                if (visited.contains(currentPerson))
+                    continue;
+                visited.add(currentPerson);
+                for (Map.Entry<Person, List<Person>> entryI : map.entrySet()) {
+                    if (entry.getKey() == currentPerson) {
+                        for (int i = 0; i <= map.size(); i++) {
+                            queue.add(map.get(entryI.getKey()).get(i));
+                            level.add(currentLevel + 1);
+                            degreeOfSeparation += currentLevel + 1;
+                            counter++;
+                        }
+                    }
+                }
+            }
+        }
+        degreeOfSeparation = degreeOfSeparation + currentLevel;
+
+        System.out.println("Average Degree of Separation: " + degreeOfSeparation/counter);
+
     }
 
 
@@ -152,21 +191,33 @@ public class GGraph {
 
         /*create a binary search tree from tempPersonActList*/
         treeSet = new TreeSet<>(new PersonComparator());
+        //temptreeset
+        TreeSet<Person> tempTreeSet = treeSet;
 
         /*Persons with activities*/
         ArrayList<Person> personActList = new ArrayList<>();
         ArrayList <Person> tempPersonActList = new ArrayList<>();
 
+        //sort PersonList store to a temp list
+        List<Person> sortedPersonList = personList;
+        sortedPersonList.sort(Comparator.comparing(Person::getFirstName));
 
         /*Finding all persons who have activities associated with them*/
 
         for (Activity a : activities) { // O(n)
-            //Sort list by first name
-            for (Person p : personList) { // O(n)
+
+            Person p = binarySearchName(a.firstName,sortedPersonList,a.lastName);
+            if(sortedPersonList.contains(p)){
+                p.appendActivity(a);
+                tempPersonActList.add(p);
+            }
+           /* for (Person p : personList) { // O(n)
                 if (a.getFirstName().equals(p.getFirstName()) && a.getLastName().equals(p.getLastName())) {
                     tempPersonActList.add(p);
                 }
-            }
+            }*/
+        }
+        treeSet.addAll(tempPersonActList);
 
             /*Not working*/
             /*Person p = binarySearchName(a.firstName, a.lastName); // O(log n) nlogn = O(nlogn)
@@ -177,12 +228,11 @@ public class GGraph {
                 /*if(person.getFirstName().equals(activity.getFirstName()) && person.getLastName().equals(activity.getLastName())){
                     personActList.add(person);
                 }*/
-        }
 
         int i =0;
         for(Person p : tempPersonActList){ // O(n)
             Activity a = activities.get(i);
-            //if(treeSet.contains(p) &&  ( p.getFirstName().equals(a.getFirstName()) && p.getLastName().equals(a.getLastName()) )){
+            if(treeSet.contains(p) /*&&  ( p.getFirstName().equals(a.getFirstName()) && p.getLastName().equals(a.getLastName()) )*/){
                 Person rightNode  = treeSet.ceiling(p); // O(log n)
                 Person leftNode = treeSet.floor(p);
                 if(rightNode == leftNode){
@@ -191,8 +241,7 @@ public class GGraph {
                     System.out.println(p.getFirstName() + " " + p.getLastName() + "\n\t" + p.printActivity());
                     personActList.add(p);
                 }
-           // }
-
+           }
             i++;
             if(i == activities.size())
                 break;
@@ -274,7 +323,7 @@ public class GGraph {
 
                     for (int i = 0; i <= activitySize-1; i++) {
                         String activity= rootPerson.getActivity().get(i).getActivityName();
-                        if(!entryPerson.getActivity().contains(activity)){
+                        if(! ( entryPerson.getActivity() == rootPerson.getActivity() )){
                             entryPerson.appendRecommendedActivity(activity);
                         }
                     }
@@ -312,25 +361,25 @@ public class GGraph {
     }
 
 
-    public Person binarySearchName(String firstName, String lastName){
+    public Person binarySearchName(String firstName,List<Person> tempPersonList, String lastName){
 
-        ArrayList<Person> sortedPersonList = new ArrayList<>(personList);
+        /*ArrayList<Person> sortedPersonList = new ArrayList<>(personList);
         sortedPersonList.sort(new Comparator<Person>() {
             @Override
             public int compare(Person o1, Person o2) {
                 return o1.getFirstName().compareTo(o2.getFirstName());
             }
-        });
+        });*/
         int left = 0;
         int right = personList.size() - 1;
         int mid = 0;
         while(left <= right){
             mid = (left + right) / 2;
-            String midFirstName = sortedPersonList.get(mid).getFirstName();
-            //String midLastName = personList.get(mid).getLastName();
-            if(midFirstName.equals(firstName) /*&& midLastName.equals(lastName)){
+            String midFirstName = tempPersonList.get(mid).getFirstName();
+            String midLastName = tempPersonList.get(mid).getLastName();
+            if(midFirstName.equals(firstName)&& midLastName.equals(lastName)){
                 return personList.get(mid);
-            }else if((midFirstName.compareToIgnoreCase(firstName) < 0) /*&& (midLastName.compareToIgnoreCase(lastName) < 0)*/){
+            }else if((midFirstName.compareToIgnoreCase(firstName) < 0) && (midLastName.compareToIgnoreCase(lastName) < 0)){
                 left = mid + 1;
             }else{
                 right = mid - 1;

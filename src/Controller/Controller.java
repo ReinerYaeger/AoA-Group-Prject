@@ -64,6 +64,7 @@ public class Controller {
         ArrayList<Person> randomPeople = graph.findRandomPeople();
 
         System.out.println("by " + graph.degreeOfSeparationRandom(randomPeople.get(0),randomPeople.get(1)));
+        graph.averageDegreeOfSeparation();
 
         graph.associateActivities(loadActivities(fileActLocation2));
         graph.recommendationEngine();

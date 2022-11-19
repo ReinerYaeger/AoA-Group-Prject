@@ -176,7 +176,7 @@ public class Person{
 
     /*Removing Duplicate Entries from the activity lists*/
     public void removeDuplicates() {
-        //Remove duplicate string from activity list
+        //Remove duplicate string from activity list and recommended activity list
         activity = activity.stream().distinct().collect(Collectors.toList());
         recommendedActivity = recommendedActivity.stream().distinct().collect(Collectors.toList());
 
