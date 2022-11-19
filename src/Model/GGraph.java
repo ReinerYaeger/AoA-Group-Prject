@@ -9,6 +9,8 @@ public class GGraph {
     static List<Person> personList = new ArrayList<>();
     final int SIZE = 100;
     List<Person> personIList = new ArrayList<>();
+
+    TreeSet<Person> treeSet = new TreeSet<>(new PersonComparator());
     Person person = new Person();
 
     public GGraph(List<Person> pl) {
@@ -129,31 +131,109 @@ public class GGraph {
     }
 
 
-    public void associateActivities(List<Activity> activities){
+    public void associateActivities(List<Activity> activities) {
         //activities.sort(Comparator.comparing(Activity::getFirstName));
-        for (Map.Entry<Person, List<Person>> entry : map.entrySet()) {
+
+        /*create a binary search tree from tempPersonActList*/
+        treeSet = new TreeSet<>(new PersonComparator());
+        ArrayList<Person> personActList = new ArrayList<>();
+        ArrayList <Person> tempPersonActList = new ArrayList<>();
+        ArrayList <Person> tempPerson = new ArrayList<>();
+
+
+        /*Finding all persons who have activities associated with them*/
+
+        for (Person person : personList) { // O(n)
+            binarySearch(person.getPhoneNumber()); // O(log n)
+
+                /*if(person.getFirstName().equals(activity.getFirstName()) && person.getLastName().equals(activity.getLastName())){
+                    personActList.add(person);
+                }*/
+
+        }
+
+        int i =0;
+        for(Person p : personActList){ // O(n)
+            Activity a = activities.get(i);
+            //if(treeSet.contains(p) &&  ( p.getFirstName().equals(a.getFirstName()) && p.getLastName().equals(a.getLastName()) )){
+                Person rightNode  = treeSet.ceiling(p); // O(log n)
+                Person leftNode = treeSet.floor(p);
+                if(rightNode == leftNode){
+                    p.appendActivity(a.activityName);
+                    p.removeDuplicates();
+                    System.out.println(p.getFirstName() + " " + p.getLastName() + "\n\t" + p.printActivity());
+                    tempPersonActList.add(p);
+                }
+           // }
+
+            i++;
+            if(i == activities.size())
+                break;
+        }
+
+        treeSet.addAll(tempPersonActList);
+
+        /*for (Person p : treeSet) {
+            Activity a = activities.stream().iterator().next();
+            if (p.getFirstName().equals(a.getFirstName())
+                    && p.getLastName().equals(a.getLastName())) {
+
+                p.appendActivity(a.activityName);
+                System.out.println(p.getFirstName() + " " + p.getLastName() + "\n\t" + a.printActivity());
+            }
+            // print the person name and activity
+            System.out.println(p.getFirstName() + " " + p.getLastName() + " " + p.printActivity());
+        }*/
+        /*for(Activity activity : activities){
+            Person person = new Person();
+            person = tempPersonActList.stream().iterator().next();
+            if(treeSet.contains(person)){
+                Person tempPerson = (Person) treeSet.floor(person);
+                tempPerson.appendActivity(activity);
+                ((Person) treeSet.floor(person)).appendActivity(activity);
+            }
+
+            System.out.println("Tree: " + treeSet);
+        }*/
+
+
+        /*for (Map.Entry<Person, List<Person>> entry : map.entrySet()) {
             Person p = entry.getKey();
             System.out.println(p.getFirstName() + " " + p.getLastName());
-            for (int i = 0; i <= activities.size()-1; i++) {
-                Activity a = activities.get(i);
-                if(p.firstName.equals(a.getFirstName())
-                        && p.lastName.equals(a.getLastName())){
 
-                    p.appendActivity(a);
+            for (int i = 0; i <= tempPersonActList.size() - 1; i++) {
 
-                    System.out.println(" is: " + p.printActivity());
+                if (tempPersonActList.get(i).getPhoneNumber().equals(p.getPhoneNumber())) {
+                    Activity a = activities.get(i);
+                    if (p.firstName.equals(a.getFirstName())
+                            && p.lastName.equals(a.getLastName())) {
+
+                        if (! ( p.getActivity().contains(a) ))
+                            tempPersonActList.get(i).appendActivity(a);
+
+                        System.out.println(" is: " + p.printActivity());
+                    }
                 }
             }
-        }
+        }*/
     }
 
     public void recommendationEngine(){
 
+        Set<Person> visited = new HashSet<>();
+
         int activitySize =0 ;
         for (Map.Entry<Person, List<Person>> root : map.entrySet()) {
             Person rootPerson = root.getKey();
+
             for (Map.Entry<Person, List<Person>> entry : map.entrySet()) {
                 Person entryPerson = entry.getKey();
+
+                if(visited.contains(entryPerson))
+                    continue;
+
+                visited.add(entryPerson);
+
                 if (entry.getKey() == root.getKey()
                         && ! root.getKey().isReqPrivacy()
                         && (rootPerson.getRelation().getEmployer().equals(entryPerson.getRelation().getEmployer())
@@ -166,12 +246,12 @@ public class GGraph {
                         activitySize = entryPerson.getActivity().size();
 
                     for (int i = 0; i <= activitySize-1; i++) {
-                        Activity activity= rootPerson.getActivity().get(i);
+                        String activity= rootPerson.getActivity().get(i).getActivityName();
                         if(!entryPerson.getActivity().contains(activity)){
                             entryPerson.appendRecommendedActivity(activity);
                         }
                     }
-
+                    entryPerson.removeDuplicates();
                     System.out.println("Suggesting to " + root.getKey().getFirstName() + " " + root.getKey().getLastName() +
                                                " to add " + entry.getKey().printRecommendedActivity() + " to his/her activity list");
                 }
@@ -179,4 +259,21 @@ public class GGraph {
         }
     }
 
+    //binary search by phone number
+    public Person binarySearch(String phoneNumber){
+        int left = 0;
+        int right = personList.size() - 1;
+        int mid = 0;
+        while(left <= right){
+            mid = (left + right) / 2;
+            if(personList.get(mid).getPhoneNumber().equals(phoneNumber)){
+                return personList.get(mid);
+            }else if(personList.get(mid).getPhoneNumber().compareTo(phoneNumber) < 0){
+                left = mid + 1;
+            }else{
+                right = mid - 1;
+            }
+        }
+        return null;
+    }
 }

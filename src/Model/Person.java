@@ -13,10 +13,10 @@ import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
-public class Person  {
+public class Person{
     String firstName;
     String lastName;
     String phoneNumber;
@@ -131,6 +131,13 @@ public class Person  {
         this.activity.add(activity);
     }
 
+    public void appendActivity(String activity) {
+        Activity a = new Activity();
+        a.setActivityName(activity);
+        this.activity.add(a);
+    }
+
+
     public List<Activity> getRecommendedActivity( ) {
         return recommendedActivity;
     }
@@ -141,6 +148,13 @@ public class Person  {
 
     public void appendRecommendedActivity(Activity activity) {
         this.recommendedActivity.add(activity);
+    }
+
+
+    public void appendRecommendedActivity(String activity) {
+        Activity a = new Activity();
+        a.setActivityName(activity);
+        this.recommendedActivity.add(a);
     }
 
     public String printActivity() {
@@ -158,6 +172,14 @@ public class Person  {
             str.append(a.getActivityName()).append(" \n\t");
         }
         return str.toString();
+    }
+
+    /*Removing Duplicate Entries from the activity lists*/
+    public void removeDuplicates() {
+        //Remove duplicate string from activity list
+        activity = activity.stream().distinct().collect(Collectors.toList());
+        recommendedActivity = recommendedActivity.stream().distinct().collect(Collectors.toList());
+
     }
 
     @Override
