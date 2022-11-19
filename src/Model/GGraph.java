@@ -250,19 +250,19 @@ public class GGraph {
         Set<Person> visited = new HashSet<>();
 
         int activitySize =0 ;
-        for (Map.Entry<Person, List<Person>> root : map.entrySet()) {
-            Person rootPerson = root.getKey();
+        for (Person root : treeSet){
+            Person rootPerson = root;
 
-            for (Map.Entry<Person, List<Person>> entry : map.entrySet()) {
-                Person entryPerson = entry.getKey();
+            for (Person entry : treeSet) {
+                Person entryPerson = entry;
 
                 if(visited.contains(entryPerson))
                     continue;
 
                 visited.add(entryPerson);
 
-                if (entry.getKey() == root.getKey()
-                        && ! root.getKey().isReqPrivacy()
+                if (entry == root
+                        && ! root.isReqPrivacy()
                         && (rootPerson.getRelation().getEmployer().equals(entryPerson.getRelation().getEmployer())
                         || rootPerson.getRelation().getResCom().equals(entryPerson.getRelation().getResCom())
                         || rootPerson.getRelation().getSchool().equals(entryPerson.getRelation().getSchool()))){
@@ -279,8 +279,8 @@ public class GGraph {
                         }
                     }
                     entryPerson.removeDuplicates();
-                    System.out.println("Suggesting to " + root.getKey().getFirstName() + " " + root.getKey().getLastName() +
-                                               " to add " + entry.getKey().printRecommendedActivity() + " to his/her activity list");
+                    System.out.println("Suggesting to " + root.getFirstName() + " " + root.getLastName() +
+                                               " to add " + entry.printRecommendedActivity() + " to his/her activity list");
                 }
             }
         }
