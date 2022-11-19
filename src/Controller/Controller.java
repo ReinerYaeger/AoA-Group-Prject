@@ -66,7 +66,7 @@ public class Controller {
         System.out.println("by " + graph.degreeOfSeparationRandom(randomPeople.get(0),randomPeople.get(1)));
 
         graph.associateActivities(loadActivities(fileActLocation2));
-        //graph.recommendationEngine();
+        graph.recommendationEngine();
 
 
         long endTime = System.nanoTime();

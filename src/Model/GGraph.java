@@ -12,12 +12,19 @@ import java.util.*;
 
 public class GGraph {
 
+    /*Everyone in the file mapped with friends*/
     static Map<Person, List<Person>> map = new HashMap<>();
-    static List<Person> personList = new ArrayList<>();
-    final int SIZE = 100;
-    List<Person> personIList = new ArrayList<>();
 
+    /*Everyone in the file*/
+    static List<Person> personList = new ArrayList<>();
+
+    /*Testing value for the file size*/
+    final int SIZE = 100;
+
+    /*People in tree, (with activities associated)*/
     TreeSet<Person> treeSet = new TreeSet<>(new PersonComparator());
+
+    /*Just a Person Object*/
     Person person = new Person();
 
     public GGraph(List<Person> pl) {
@@ -27,6 +34,8 @@ public class GGraph {
     }
 
     public void findFriends( ){
+        /*People in Persons List Friends*/
+        List<Person> personIList = new ArrayList<>();
 
         int l=0,i=0;
         for (Person person : personList) { // O(n)
@@ -143,24 +152,35 @@ public class GGraph {
 
         /*create a binary search tree from tempPersonActList*/
         treeSet = new TreeSet<>(new PersonComparator());
+
+        /*Persons with activities*/
         ArrayList<Person> personActList = new ArrayList<>();
         ArrayList <Person> tempPersonActList = new ArrayList<>();
-        ArrayList <Person> tempPerson = new ArrayList<>();
 
 
         /*Finding all persons who have activities associated with them*/
 
-        for (Person person : personList) { // O(n)
-            binarySearch(person.getPhoneNumber()); // O(log n)
+        for (Activity a : activities) { // O(n)
+            //Sort list by first name
+            for (Person p : personList) { // O(n)
+                if (a.getFirstName().equals(p.getFirstName()) && a.getLastName().equals(p.getLastName())) {
+                    tempPersonActList.add(p);
+                }
+            }
 
+            /*Not working*/
+            /*Person p = binarySearchName(a.firstName, a.lastName); // O(log n) nlogn = O(nlogn)
+            if (p != null) {
+                p.appendActivity(a.getActivityName());
+                tempPersonActList.add(p);
+            }*/
                 /*if(person.getFirstName().equals(activity.getFirstName()) && person.getLastName().equals(activity.getLastName())){
                     personActList.add(person);
                 }*/
-
         }
 
         int i =0;
-        for(Person p : personActList){ // O(n)
+        for(Person p : tempPersonActList){ // O(n)
             Activity a = activities.get(i);
             //if(treeSet.contains(p) &&  ( p.getFirstName().equals(a.getFirstName()) && p.getLastName().equals(a.getLastName()) )){
                 Person rightNode  = treeSet.ceiling(p); // O(log n)
@@ -169,7 +189,7 @@ public class GGraph {
                     p.appendActivity(a.activityName);
                     p.removeDuplicates();
                     System.out.println(p.getFirstName() + " " + p.getLastName() + "\n\t" + p.printActivity());
-                    tempPersonActList.add(p);
+                    personActList.add(p);
                 }
            // }
 
@@ -178,7 +198,7 @@ public class GGraph {
                 break;
         }
 
-        treeSet.addAll(tempPersonActList);
+        treeSet.addAll(personActList);
 
         /*for (Person p : treeSet) {
             Activity a = activities.stream().iterator().next();
@@ -265,11 +285,11 @@ public class GGraph {
             }
         }
     }
-
     //binary search by phone number
     public Person binarySearch(String phoneNumber){
+
         int left = 0;
-        int right = personList.size() - 1;
+        int right = SIZE - 1;
         int mid = 0;
         while(left <= right){
             mid = (left + right) / 2;
@@ -283,4 +303,41 @@ public class GGraph {
         }
         return null;
     }
+
+    public boolean samePerson(Person p1, Person p2){
+        if(p1.getFirstName().equals(p2.getFirstName()) && p1.getLastName().equals(p2.getLastName()))
+            return true;
+        else
+            return false;
+    }
+
+
+    public Person binarySearchName(String firstName, String lastName){
+
+        ArrayList<Person> sortedPersonList = new ArrayList<>(personList);
+        sortedPersonList.sort(new Comparator<Person>() {
+            @Override
+            public int compare(Person o1, Person o2) {
+                return o1.getFirstName().compareTo(o2.getFirstName());
+            }
+        });
+        int left = 0;
+        int right = personList.size() - 1;
+        int mid = 0;
+        while(left <= right){
+            mid = (left + right) / 2;
+            String midFirstName = sortedPersonList.get(mid).getFirstName();
+            //String midLastName = personList.get(mid).getLastName();
+            if(midFirstName.equals(firstName) /*&& midLastName.equals(lastName)){
+                return personList.get(mid);
+            }else if((midFirstName.compareToIgnoreCase(firstName) < 0) /*&& (midLastName.compareToIgnoreCase(lastName) < 0)*/){
+                left = mid + 1;
+            }else{
+                right = mid - 1;
+            }
+        }
+        return null;
+    }
+
+
 }
