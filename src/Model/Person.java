@@ -193,6 +193,15 @@ public class Person{
         return false;
     }
 
+     public boolean containSameActivity(Person p) {
+        //for each item in the activity list check if the other person has the same activity
+        for (Activity a : activity) {
+            if (p.getActivity().contains(a))
+                return true;
+        }
+        return false;
+    }
+
     @Override
     public String toString( ) {
         return "Person{" +

@@ -214,7 +214,8 @@ public class GGraph {
         /*Finding all persons who have activities associated with them*/
 
         /*using a red black tree*/
-        Map<Person, List<Person>> tempMap = map;
+        TreeMap<Person, List<Person>> tempMap = new TreeMap<>(new PersonComparator());
+        tempMap.putAll(map);
 
         //create a tree map set
 
@@ -238,7 +239,7 @@ public class GGraph {
 
         }
 
-        map = tempMap;
+        //map = tempMap;
         //print the values in treemap
         tempMap.entrySet().stream().forEach(entry->System.out.println(entry.getKey().getFirstName() + " " + entry.getKey().getLastName() + " " + entry.getKey().printActivity()));
     }
@@ -331,7 +332,9 @@ public class GGraph {
 
     public void recommendationEngine(){
 
-        Map<Person, List<Person>> tempMap = map;
+        TreeMap<Person, List<Person>> tempMap = new TreeMap<>( new PersonComparator() );
+        tempMap.putAll(map);
+
 
         //recommend activity to people who are related using the tempMap filter stream
 
@@ -340,8 +343,29 @@ public class GGraph {
         //if the person is not related to them then do not recommend the activity to them
         //if the person doesnt not request privacy then recommend the activity to them
 
-
         for(Map.Entry<Person, List<Person>> entry : tempMap.entrySet()){
+            Person p = entry.getValue().stream().iterator().next();
+            System.out.println(p.getFirstName() + " " + p.getLastName());
+
+            for(Person person : tempMap.get(p)){
+                if(p.isRelatedTo(person)){
+                    //check if p and person have the same activity
+                    //if they do not have the same activity then recommend the activity to person
+                    if(!p.containSameActivity(person)){
+
+                        //CollectionUtils.dis
+                        //find the activity that p has that person does not have
+                        //recommend the activity to person
+                        System.out.println("Recommend " + p.getActivity() + " to " + person.getFirstName() + " " + person.getLastName());
+                    }
+                }
+                if(person.getFirstName().equals(p.getFirstName()) && person.getLastName().equals(p.getLastName())){
+                    System.out.println(" is related to " + person.getFirstName() + " " + person.getLastName());
+                }
+            }
+        }
+
+        /*for(Map.Entry<Person, List<Person>> entry : tempMap.entrySet()){
             if(tempMap.containsKey(entry.getKey())){
                 //get the list of persons who are related to the person
                 List<Person> relatedPersons = tempMap.get(entry.getKey());
@@ -355,12 +379,13 @@ public class GGraph {
                             //if the person does not request privacy then recommend the activity to them
                             if(!person.isReqPrivacy()){
                                 person.appendRecommendedActivity(activity.getActivityName());
+                                System.out.println( "We are recommending " + activity.getActivityName() + " to " + person.getFirstName() + " " + person.getLastName());
                             }
                         }
                     }
                 }
             }
-        }
+        }*/
 
 
 
@@ -375,11 +400,11 @@ public class GGraph {
 
 
 
-        tempMap.entrySet().stream().filter( entry -> entry.getKey().getActivity().size() > 1)
+        /*tempMap.entrySet().stream().filter( entry -> entry.getKey().getActivity().size() > 1)
                 .forEach(entry -> {
                     System.out.println(entry.getKey().getFirstName() + " " + entry.getKey().getLastName() + " " + entry.getKey().printActivity());
                     entry.getValue().stream().forEach(person -> System.out.println("\t" + person.getFirstName() + " " + person.getLastName() + " " + person.printRecommendedActivity()));
-                });
+                });*/
     }
 
        /* Set<Person> visited = new HashSet<>();
