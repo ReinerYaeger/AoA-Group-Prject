@@ -182,6 +182,17 @@ public class Person{
 
     }
 
+
+    public boolean isRelatedTo(Person p) {
+        if(p.getRelation().getEmployer().equals(this.relation.getEmployer()))
+            return true;
+        if(p.getRelation().getSchool().equals(this.relation.getSchool()))
+            return true;
+        if(p.getRelation().getResCom().equals(this.relation.getResCom()))
+            return true;
+        return false;
+    }
+
     @Override
     public String toString( ) {
         return "Person{" +

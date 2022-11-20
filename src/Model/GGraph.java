@@ -13,13 +13,14 @@ import java.util.*;
 public class GGraph {
 
     /*Everyone in the file mapped with friends*/
-    static Map<Person, List<Person>> map = new HashMap<>();
+    Map<Person, List<Person>> map = new HashMap<>();
 
     /*Everyone in the file*/
-    static List<Person> personList = new ArrayList<>();
+    List<Person> personList = new ArrayList<>();
+    List <Activity>activityList = new ArrayList<>();
 
     /*Testing value for the file size*/
-    final int SIZE = 1000;
+    final int SIZE = 100;
 
     /*People in tree, (with activities associated)*/
     TreeSet<Person> treeSet = new TreeSet<>(new PersonComparator());
@@ -120,104 +121,137 @@ public class GGraph {
 
             visited.add(currentPerson);
 
-            if(currentPerson == destination)
+            if(currentPerson == destination){
                 return currentLevel;
 
-            if (source.getRelation().getEmployer().equals(destination.getRelation().getEmployer())
-                        || source.getRelation().getResCom().equals(destination.getRelation().getResCom())
-                        || source.getRelation().getSchool().equals(destination.getRelation().getSchool())) {
+            }else {
+                for (Map.Entry<Person, List<Person>> entry : map.entrySet()) {
 
-                return currentLevel+1;
-            }
-
-            for (Map.Entry<Person, List<Person>> entry : map.entrySet()) {
-                if(entry.getKey() == currentPerson){
-                    for (int i = 0; i <= map.size(); i++) {
-                        queue.add(map.get(entry.getKey()).get(i));
-                        level.add(currentLevel+1);
+                    if (entry.getKey().equals(destination)) {
+                        return ++currentLevel;
                     }
+                        queue.add(entry.getKey());
+                        level.add(currentLevel++);
                 }
             }
-
         }
+
         System.out.println(source.getFirstName() +  " " + source.getLastName() +
                 " is Separated from " + destination.getFirstName() + " " + destination.getLastName() + " by " + currentLevel + " degrees");
         return currentLevel;
     }
 
-    public void averageDegreeOfSeparation(){
+    public int degreeOfSeparation(Person source, Person destination){
+        /*Done Using the Breadth First Search Algo*/
+
         Set<Person> visited = new HashSet<>();
         Queue<Person> queue = new LinkedList<>();
         Queue<Integer> level = new LinkedList<>();
-
-        int degreeOfSeparation = 0;
-        int counter = 0;
         int currentLevel = 0;
-        Map.Entry<Person, List<Person>> p = map.entrySet().iterator().next();
-        queue.add(p.getKey());
+        queue.add(source);
         level.add(currentLevel);
 
+        while(!queue.isEmpty()){
 
-        for (Map.Entry<Person, List<Person>> entry : map.entrySet()) {
+            Person currentPerson = queue.poll();
+            currentLevel = level.poll();
 
-            while(!queue.isEmpty()) {
-                Person currentPerson = queue.poll();
-                currentLevel = level.poll();
+            if(visited.contains(currentPerson))
+                continue;
 
-                if (visited.contains(currentPerson))
-                    continue;
-                visited.add(currentPerson);
-                for (Map.Entry<Person, List<Person>> entryI : map.entrySet()) {
-                    if (entry.getKey() == currentPerson) {
-                        for (int i = 0; i <= map.size(); i++) {
-                            queue.add(map.get(entryI.getKey()).get(i));
-                            level.add(currentLevel + 1);
-                            degreeOfSeparation += currentLevel + 1;
-                            counter++;
-                        }
+            visited.add(currentPerson);
+
+            if(currentPerson == destination){
+                return currentLevel;
+
+            }else {
+                for (Map.Entry<Person, List<Person>> entry : map.entrySet()) {
+
+                    if (entry.getKey().equals(destination)) {
+                        return ++currentLevel;
                     }
+                        queue.add(entry.getKey());
+                        level.add(currentLevel++);
                 }
             }
         }
-        degreeOfSeparation = degreeOfSeparation + currentLevel;
+        return currentLevel;
+    }
 
-        System.out.println("Average Degree of Separation: " + degreeOfSeparation/counter);
+    //find the average degree of separation for all nodes in the graph
+    public int averageDegreeOfSeparation(){
+        int total = 0;
+        int counter = 0;
+        for (Map.Entry<Person, List<Person>> entry : map.entrySet()) {
+            for (Map.Entry<Person, List<Person>> entry1 : map.entrySet()) {
+                if(entry.getKey() != entry1.getKey()){
+                    total += degreeOfSeparation(entry.getKey(),entry1.getKey());
+                    counter++;
+                }
+            }
+        }
 
+        System.out.println("Average Degree of Separation: " + total/counter);
+        return total/counter;
     }
 
 
+
+
     public void associateActivities(List<Activity> activities) {
+
+         activityList = activities;
         //activities.sort(Comparator.comparing(Activity::getFirstName));
 
         /*create a binary search tree from tempPersonActList*/
         treeSet = new TreeSet<>(new PersonComparator());
-        //temptreeset
-        TreeSet<Person> tempTreeSet = treeSet;
 
         /*Persons with activities*/
         ArrayList<Person> personActList = new ArrayList<>();
-        ArrayList <Person> tempPersonActList = new ArrayList<>();
+        ArrayList<Person> tempPersonActList = new ArrayList<>();
 
-        //sort PersonList store to a temp list
-        List<Person> sortedPersonList = personList;
-        sortedPersonList.sort(Comparator.comparing(Person::getFirstName));
 
         /*Finding all persons who have activities associated with them*/
 
-        for (Activity a : activities) { // O(n)
+        /*using a red black tree*/
+        Map<Person, List<Person>> tempMap = map;
 
-            Person p = binarySearchName(a.firstName,sortedPersonList,a.lastName);
-            if(sortedPersonList.contains(p)){
-                p.appendActivity(a);
-                tempPersonActList.add(p);
-            }
-           /* for (Person p : personList) { // O(n)
+        //create a tree map set
+
+        for (Activity a : activities) { // O(n) * O(log n) = O(n log n)
+            //check if the firstname and last name is present in the tree map without a loop
+            //if present add the activity to the person
+            //if not present create a new person and add the activity to the person
+            //add the person to the tree map  Ologn
+            //The map is sorted according to the natural ordering of its keys
+
+            Person person = new Person();
+            person.setFirstName(a.getFirstName());
+            person.setLastName(a.getLastName());
+
+            /*is the first name and last name presnt in the list?
+             * if yes we append the associated activity with that person*/
+
+            tempMap.entrySet().stream().filter(entry->entry.getKey().getFirstName().equals(person.getFirstName())
+                            && entry.getKey().getLastName().equals(person.getLastName()))
+                    .forEach(entry->entry.getKey().appendActivity(a.getActivityName()));
+
+        }
+
+        map = tempMap;
+        //print the values in treemap
+        tempMap.entrySet().stream().forEach(entry->System.out.println(entry.getKey().getFirstName() + " " + entry.getKey().getLastName() + " " + entry.getKey().printActivity()));
+    }
+
+
+
+        /*for (Activity a : activities) { // O(n)
+            //Sort list by first name
+            for (Person p : personList) { // O(n)
                 if (a.getFirstName().equals(p.getFirstName()) && a.getLastName().equals(p.getLastName())) {
                     tempPersonActList.add(p);
                 }
             }*/
-        }
-        treeSet.addAll(tempPersonActList);
 
             /*Not working*/
             /*Person p = binarySearchName(a.firstName, a.lastName); // O(log n) nlogn = O(nlogn)
@@ -229,10 +263,10 @@ public class GGraph {
                     personActList.add(person);
                 }*/
 
-        int i =0;
+        /*int i =0;
         for(Person p : tempPersonActList){ // O(n)
             Activity a = activities.get(i);
-            if(treeSet.contains(p) /*&&  ( p.getFirstName().equals(a.getFirstName()) && p.getLastName().equals(a.getLastName()) )*/){
+            //if(treeSet.contains(p) &&  ( p.getFirstName().equals(a.getFirstName()) && p.getLastName().equals(a.getLastName()) )){
                 Person rightNode  = treeSet.ceiling(p); // O(log n)
                 Person leftNode = treeSet.floor(p);
                 if(rightNode == leftNode){
@@ -241,13 +275,14 @@ public class GGraph {
                     System.out.println(p.getFirstName() + " " + p.getLastName() + "\n\t" + p.printActivity());
                     personActList.add(p);
                 }
-           }
+           // }
+
             i++;
             if(i == activities.size())
                 break;
         }
 
-        treeSet.addAll(personActList);
+        treeSet.addAll(personActList);*/
 
         /*for (Person p : treeSet) {
             Activity a = activities.stream().iterator().next();
@@ -292,11 +327,62 @@ public class GGraph {
                 }
             }
         }*/
-    }
+
 
     public void recommendationEngine(){
 
-        Set<Person> visited = new HashSet<>();
+        Map<Person, List<Person>> tempMap = map;
+
+        //recommend activity to people who are related using the tempMap filter stream
+
+        //for each person in the map find the person who is related to them
+        //if the person is related to them then recommend the activity to them
+        //if the person is not related to them then do not recommend the activity to them
+        //if the person doesnt not request privacy then recommend the activity to them
+
+
+        for(Map.Entry<Person, List<Person>> entry : tempMap.entrySet()){
+            if(tempMap.containsKey(entry.getKey())){
+                //get the list of persons who are related to the person
+                List<Person> relatedPersons = tempMap.get(entry.getKey());
+                //get the list of activities of the person
+                List<Activity> activities = entry.getKey().getActivity();
+                //for each activity of the person recommend the activity to the related persons
+                for(Activity activity : activities){
+                    for(Person person : relatedPersons){
+                        //if the person is not related to the person then recommend the activity to them
+                        if(!person.isRelatedTo(entry.getKey())){
+                            //if the person does not request privacy then recommend the activity to them
+                            if(!person.isReqPrivacy()){
+                                person.appendRecommendedActivity(activity.getActivityName());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+
+
+        /*for(Activity a: activityList) {
+            Person person = new Person();
+            person.setFirstName(a.getFirstName());
+            person.setLastName(a.getLastName());
+            tempMap.entrySet().stream().filter(entry->entry.getKey().getFirstName().equals(person.getFirstName())
+                            && entry.getKey().getLastName().equals(person.getLastName()))
+                    .forEach();*/
+
+
+
+        tempMap.entrySet().stream().filter( entry -> entry.getKey().getActivity().size() > 1)
+                .forEach(entry -> {
+                    System.out.println(entry.getKey().getFirstName() + " " + entry.getKey().getLastName() + " " + entry.getKey().printActivity());
+                    entry.getValue().stream().forEach(person -> System.out.println("\t" + person.getFirstName() + " " + person.getLastName() + " " + person.printRecommendedActivity()));
+                });
+    }
+
+       /* Set<Person> visited = new HashSet<>();
 
         int activitySize =0 ;
         for (Person root : treeSet){
@@ -323,7 +409,7 @@ public class GGraph {
 
                     for (int i = 0; i <= activitySize-1; i++) {
                         String activity= rootPerson.getActivity().get(i).getActivityName();
-                        if(! ( entryPerson.getActivity() == rootPerson.getActivity() )){
+                        if(!entryPerson.getActivity().contains(activity)){
                             entryPerson.appendRecommendedActivity(activity);
                         }
                     }
@@ -332,8 +418,7 @@ public class GGraph {
                                                " to add " + entry.printRecommendedActivity() + " to his/her activity list");
                 }
             }
-        }
-    }
+        }*/
     //binary search by phone number
     public Person binarySearch(String phoneNumber){
 
@@ -361,25 +446,25 @@ public class GGraph {
     }
 
 
-    public Person binarySearchName(String firstName,List<Person> tempPersonList, String lastName){
+    public Person binarySearchName(String firstName, String lastName){
 
-        /*ArrayList<Person> sortedPersonList = new ArrayList<>(personList);
+        ArrayList<Person> sortedPersonList = new ArrayList<>(personList);
         sortedPersonList.sort(new Comparator<Person>() {
             @Override
             public int compare(Person o1, Person o2) {
                 return o1.getFirstName().compareTo(o2.getFirstName());
             }
-        });*/
+        });
         int left = 0;
         int right = personList.size() - 1;
         int mid = 0;
         while(left <= right){
             mid = (left + right) / 2;
-            String midFirstName = tempPersonList.get(mid).getFirstName();
-            String midLastName = tempPersonList.get(mid).getLastName();
-            if(midFirstName.equals(firstName)&& midLastName.equals(lastName)){
+            String midFirstName = sortedPersonList.get(mid).getFirstName();
+            //String midLastName = personList.get(mid).getLastName();
+            if(midFirstName.equals(firstName) /*&& midLastName.equals(lastName)){
                 return personList.get(mid);
-            }else if((midFirstName.compareToIgnoreCase(firstName) < 0) && (midLastName.compareToIgnoreCase(lastName) < 0)){
+            }else if((midFirstName.compareToIgnoreCase(firstName) < 0) /*&& (midLastName.compareToIgnoreCase(lastName) < 0)*/){
                 left = mid + 1;
             }else{
                 right = mid - 1;

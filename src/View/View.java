@@ -83,6 +83,7 @@ public class View {
                     return;
                 }
                 controller.readFiles(filePersonLocation,fileActLocation2);
+                controller = new Controller();
             }
         });
     }
