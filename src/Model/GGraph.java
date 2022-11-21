@@ -29,6 +29,7 @@ public class GGraph {
     /*Testing value for the file size*/
     final int SIZE = 100;
 
+
     /*People in tree, (with activities associated)*/
     TreeSet<Person> treeSet = new TreeSet<>(new PersonComparator());
 
@@ -37,6 +38,7 @@ public class GGraph {
 
     public GGraph(List<Person> pl) {
         personList = pl;
+        //SIZE = personList.size();
 
         //pl.sort(Comparator.comparing(Person::getFirstName));
     }
@@ -67,7 +69,7 @@ public class GGraph {
 
         for (Map.Entry<Person, List<Person>> entry : map.entrySet()) {
             System.out.println(entry.getKey().getFirstName() + " " + entry.getKey().getLastName());
-            for (i = 0; i <= map.size(); i++) {
+            for (i = 0; i <= map.size()-1; i++) {
                 System.out.println("\tFriends: " + map.get(entry.getKey()).get(i).getFirstName());
             }
         }
@@ -91,7 +93,7 @@ public class GGraph {
             if(random2 == counter )
                 person2 = entry.getKey();
 
-            for (int i = 0; i <= map.size(); i++) {
+            for (int i = 0; i <= map.size()-1; i++) {
                 System.out.println("\tFriends: " + map.get(entry.getKey()).get(i).getFirstName());
             }
             counter ++;
