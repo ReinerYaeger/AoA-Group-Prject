@@ -3,6 +3,9 @@
 *   Gail-Ann Archer 2002407,
 *   Lashea Beaton 2003885,
 *   Jermaine Graham 1704263
+*
+* * // Date Created: 2021-03-29
+* Title: Aoa Group Project
 */
 
 package Model;
@@ -198,8 +201,6 @@ public class GGraph {
     }
 
 
-
-
     public void associateActivities(List<Activity> activities) {
 
          activityList = activities;
@@ -239,8 +240,12 @@ public class GGraph {
                             && entry.getKey().getLastName().equals(person.getLastName()))
                     .forEach(entry->{
                         entry.getKey().appendActivity(a.getActivityName(),a.getFirstName(),a.getLastName());
+                        //remove duplicates activities
+                        entry.getKey().removeDuplicates();
                         personActList.add(entry.getKey());
                     });
+            //remove duplicates from activity list
+            personActList = (ArrayList<Person>) personActList.stream().distinct().collect(Collectors.toList());
         }
 
 
@@ -354,11 +359,11 @@ public class GGraph {
 
 
         for (Map.Entry<Person, List<Person>> entry : tempMap.entrySet()) {
-            List <Person> people = entry.getValue();
+            List<Person> people = entry.getValue();
             Iterator<Person> it = people.iterator();
             for (Person person : personActList) {
                 //check if the current key has the same person list value
-                if (tempMap.get(person) == people) {
+                if (tempMap.containsValue(people)) {
 
                     Person friend = it.next();
 
@@ -375,11 +380,15 @@ public class GGraph {
                         //recommend the activity to person
 
                         for (Activity a : al) {
-                            System.out.println("Recommend " + a.getActivityName() + " to " + person.getFirstName() + " " + person.getLastName());
+                            //if(!friend.containSameActivity(a))
+                            friend.appendRecommendedActivity(a);
+
+                            System.out.println("Recommend " + friend.printRecommendedActivity() + " to " + friend.getFirstName() + " " + friend.getLastName());
+                            //  }
+                            System.out.println();
                         }
                     }
                 }
-            }
 
         /*for(Map.Entry<Person, List<Person>> entry : tempMap.entrySet()){
             if(tempMap.containsKey(entry.getKey())){
@@ -421,7 +430,7 @@ public class GGraph {
                     System.out.println(entry.getKey().getFirstName() + " " + entry.getKey().getLastName() + " " + entry.getKey().printActivity());
                     entry.getValue().stream().forEach(person -> System.out.println("\t" + person.getFirstName() + " " + person.getLastName() + " " + person.printRecommendedActivity()));
                 });*/
-        }
+            }
 
        /* Set<Person> visited = new HashSet<>();
 
@@ -460,6 +469,7 @@ public class GGraph {
                 }
             }
         }*/
+        }
     }
     //binary search by phone number
     public Person binarySearch(String phoneNumber){

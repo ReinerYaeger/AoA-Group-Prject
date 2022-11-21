@@ -1,3 +1,12 @@
+/*
+*   Chevaughn Gibson 1900396,
+*   Gail-Ann Archer 2002407,
+*   Lashea Beaton 2003885,
+*   Jermaine Graham 1704263
+*
+* // Date Created: 2021-03-29
+* Title: Aoa Group Project
+*/
 package Controller;
 
 import Model.*;
@@ -16,6 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class Controller {
     Person person;
@@ -73,7 +83,9 @@ public class Controller {
 
 
         long endTime = System.nanoTime();
-        System.out.println(endTime - startTime);
+        long duration = (endTime - startTime);
+        //convert to seconds
+        System.out.println("Time taken: " + TimeUnit.NANOSECONDS.toSeconds(duration) + " seconds");
 
     }
 
