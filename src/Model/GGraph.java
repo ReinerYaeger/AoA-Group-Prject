@@ -383,10 +383,9 @@ public class GGraph {
                             //if(!friend.containSameActivity(a))
                             friend.appendRecommendedActivity(a);
 
-                            System.out.println("Recommend " + friend.printRecommendedActivity() + " to " + friend.getFirstName() + " " + friend.getLastName());
-                            //  }
-                            System.out.println();
                         }
+                        System.out.println("Recommend " + friend.printRecommendedActivity() + " to " + friend.getFirstName() + " " + friend.getLastName());
+                        System.out.println();
                     }
                 }
 
