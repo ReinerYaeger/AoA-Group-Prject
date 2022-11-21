@@ -6,13 +6,6 @@
 */
 package Model;
 
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVRecord;
-
-import java.io.IOException;
-import java.io.Reader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -131,9 +124,11 @@ public class Person{
         this.activity.add(activity);
     }
 
-    public void appendActivity(String activity) {
+    public void appendActivity(String activity, String firstName, String lastName) {
         Activity a = new Activity();
         a.setActivityName(activity);
+        a.setFirstName(this.firstName);
+        a.setLastName(this.lastName);
         this.activity.add(a);
     }
 

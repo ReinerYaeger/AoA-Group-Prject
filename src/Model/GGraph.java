@@ -9,6 +9,7 @@ package Model;
 
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class GGraph {
 
@@ -18,6 +19,9 @@ public class GGraph {
     /*Everyone in the file*/
     List<Person> personList = new ArrayList<>();
     List <Activity>activityList = new ArrayList<>();
+    TreeMap<Person, List<Person>> treeMap = new TreeMap<>(new PersonComparator());
+
+    ArrayList<Person> personActList = new ArrayList<>(); /*This is everyone who participates in an activity*/
 
     /*Testing value for the file size*/
     final int SIZE = 100;
@@ -44,9 +48,7 @@ public class GGraph {
                 break;
             personIList = new ArrayList<>();
             for (Person person1 : personList) { // O(n) n*n = O(n^2)
-                if (person.getRelation().getEmployer().equals(person1.getRelation().getEmployer())
-                        || person.getRelation().getResCom().equals(person1.getRelation().getResCom())
-                        || person.getRelation().getSchool().equals(person1.getRelation().getSchool())) {
+                if (person.isRelatedTo(person1)) {
                     if (person != person1) {
                         personIList.add(person1);
                     }
@@ -207,7 +209,7 @@ public class GGraph {
         treeSet = new TreeSet<>(new PersonComparator());
 
         /*Persons with activities*/
-        ArrayList<Person> personActList = new ArrayList<>();
+        personActList = new ArrayList<>();
         ArrayList<Person> tempPersonActList = new ArrayList<>();
 
 
@@ -235,13 +237,20 @@ public class GGraph {
 
             tempMap.entrySet().stream().filter(entry->entry.getKey().getFirstName().equals(person.getFirstName())
                             && entry.getKey().getLastName().equals(person.getLastName()))
-                    .forEach(entry->entry.getKey().appendActivity(a.getActivityName()));
-
+                    .forEach(entry->{
+                        entry.getKey().appendActivity(a.getActivityName(),a.getFirstName(),a.getLastName());
+                        personActList.add(entry.getKey());
+                    });
         }
+
+
+        treeMap = tempMap;
 
         //map = tempMap;
         //print the values in treemap
-        tempMap.entrySet().stream().forEach(entry->System.out.println(entry.getKey().getFirstName() + " " + entry.getKey().getLastName() + " " + entry.getKey().printActivity()));
+        tempMap.entrySet().stream().forEach(entry->System.out.println(entry.getKey().getFirstName()
+                                                                              + " " + entry.getKey().getLastName()
+                                                                              + " " + entry.getKey().printActivity()));
     }
 
 
@@ -330,10 +339,10 @@ public class GGraph {
         }*/
 
 
-    public void recommendationEngine(){
+    public void recommendationEngine() {
 
-        TreeMap<Person, List<Person>> tempMap = new TreeMap<>( new PersonComparator() );
-        tempMap.putAll(map);
+        TreeMap<Person, List<Person>> tempMap = new TreeMap<>(new PersonComparator());
+        tempMap.putAll(treeMap);
 
 
         //recommend activity to people who are related using the tempMap filter stream
@@ -343,27 +352,34 @@ public class GGraph {
         //if the person is not related to them then do not recommend the activity to them
         //if the person doesnt not request privacy then recommend the activity to them
 
-        for(Map.Entry<Person, List<Person>> entry : tempMap.entrySet()){
-            Person p = entry.getValue().stream().iterator().next();
-            System.out.println(p.getFirstName() + " " + p.getLastName());
 
-            for(Person person : tempMap.get(p)){
-                if(p.isRelatedTo(person)){
+        for (Map.Entry<Person, List<Person>> entry : tempMap.entrySet()) {
+            List <Person> people = entry.getValue();
+            Iterator<Person> it = people.iterator();
+            for (Person person : personActList) {
+                //check if the current key has the same person list value
+                if (tempMap.get(person) == people) {
+
+                    Person friend = it.next();
+
                     //check if p and person have the same activity
                     //if they do not have the same activity then recommend the activity to person
-                    if(!p.containSameActivity(person)){
+                    if (! person.containSameActivity(friend)) {
+                        List<Activity> al = friend.getActivity();
+                        al.addAll(person.getActivity());
+                        Set unique = new HashSet(al);
+                        al = (List<Activity>) unique.stream().collect(Collectors.toList());
 
                         //CollectionUtils.dis
                         //find the activity that p has that person does not have
                         //recommend the activity to person
-                        System.out.println("Recommend " + p.getActivity() + " to " + person.getFirstName() + " " + person.getLastName());
+
+                        for (Activity a : al) {
+                            System.out.println("Recommend " + a.getActivityName() + " to " + person.getFirstName() + " " + person.getLastName());
+                        }
                     }
                 }
-                if(person.getFirstName().equals(p.getFirstName()) && person.getLastName().equals(p.getLastName())){
-                    System.out.println(" is related to " + person.getFirstName() + " " + person.getLastName());
-                }
             }
-        }
 
         /*for(Map.Entry<Person, List<Person>> entry : tempMap.entrySet()){
             if(tempMap.containsKey(entry.getKey())){
@@ -405,7 +421,7 @@ public class GGraph {
                     System.out.println(entry.getKey().getFirstName() + " " + entry.getKey().getLastName() + " " + entry.getKey().printActivity());
                     entry.getValue().stream().forEach(person -> System.out.println("\t" + person.getFirstName() + " " + person.getLastName() + " " + person.printRecommendedActivity()));
                 });*/
-    }
+        }
 
        /* Set<Person> visited = new HashSet<>();
 
@@ -444,6 +460,7 @@ public class GGraph {
                 }
             }
         }*/
+    }
     //binary search by phone number
     public Person binarySearch(String phoneNumber){
 
